@@ -1,0 +1,16 @@
+.RightSide {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.navIcons{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navIcons>Img{
+    width: 1.5em;
+    height: 1.5em;
+}
