@@ -74,23 +74,52 @@ export const followUser = async (req, res) => {
 
     const {currentUserId} = req.body
 
-    if (currentUserId === id)
-    {
+    if (currentUserId === id) {
         res.status(403).json("Acción no permitida, no puedes seguirte a ti mismo, macho, estamos tontos??")
-    }
-    else {
+    } else {
         try {
-            const followUser= UserModel.findById(id)
-            const followingUser = UserModel.findById(currentUserId)
+            const followUser= await UserModel.findById(id);
+            const followingUser = await UserModel.findById(currentUserId);
+
+            if(!followUser.followers.includes(currentUserId))
+            {
+                await followUser.updateOne({$push : {followers: currentUserId}});
+                await followingUser.updateOne({$push: {following: id}});
+                res.status(200).json("Usuario seguido");
+            }
+            else{
+                res.status(403).json("Ya estás siguiendo a este usuario");
+            }
+
+        } catch (error) {
+            res.status(500).json(error);
+            
+        }
+    }
+};
+
+// Dejar de seguir a un usuario
+
+export const UnFollowUser = async (req, res) => {
+    const id = req.params.id
+
+    const {currentUserId} = req.body
+
+    if (currentUserId === id) {
+        res.status(403).json("Acción no permitida, no puedes seguirte a ti mismo, macho, estamos tontos??")
+    } else {
+        try {
+            const followUser= await UserModel.findById(id);
+            const followingUser = await UserModel.findById(currentUserId);
 
             if(followUser.followers.includes(currentUserId))
             {
-                await followUser.updateOne({$push : {followers: currentUserId}})
-                await followingUser.updateOne({$push: {following: id}})
-                res.status(200).json("Usuario seguido")
+                await followUser.updateOne({$pull : {followers: currentUserId}})
+                await followingUser.updateOne({$pull: {following: id}})
+                res.status(200).json("Has dejado en paz al usuario!")
             }
             else{
-                res.status(403).json("Ya estás siguiendo a este usuario")
+                res.status(403).json("No estás molestando a este usuario")
             }
 
         } catch (error) {
