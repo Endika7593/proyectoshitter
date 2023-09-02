@@ -1,41 +1,45 @@
 import React, { useState } from 'react'
 import './Auth.css'
 import Logo from '../../img/logo.png'
-
+import { useDispatch } from 'react-redux';
+import { logIn, signUp } from '../../actions/AuthAction';
 const Auth = () => {
     const [isSignUp, setIsSignUp] = useState(true);
-
-    const [data, setData]=useState({
-        firstname: "", 
-        lastname: "", 
-        password: "", 
-        confirmpass: "", 
+    const dispatch = useDispatch();
+    const [data, setData] = useState({
+        firstname: "",
+        lastname: "",
+        password: "",
+        confirmpass: "",
         username: ""
     });
 
     const [confirmPass, setConfirmPass] = useState(true)
     const hadleChange = (e) => {
-        setData({...data, [e.target.name]: e.target.value});
+        setData({ ...data, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e)=> {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        if(isSignUp)
+        if (isSignUp) {
+            data.password === data.confirmpass 
+            ? dispatch(signUp(data)) 
+            : setConfirmPass(false)
+        } else
         {
-            if(data.password !== data.confirmpass)
-            {setConfirmPass(false)}
+            dispatch(logIn(data))
         }
     }
 
-    const resetForm=()=>{
+    const resetForm = () => {
         setConfirmPass(true);
         setData({
-        firstname: "", 
-        lastname: "", 
-        password: "", 
-        confirmpass: "", 
-        username: ""
+            firstname: "",
+            lastname: "",
+            password: "",
+            confirmpass: "",
+            username: ""
         });
     };
     return (
@@ -61,7 +65,7 @@ const Auth = () => {
                                 placeholder="Nombre"
                                 className="infoInput"
                                 name="firstname"
-                                onChange = {hadleChange}
+                                onChange={hadleChange}
                                 value={data.firstname}
                             />
                             <input
@@ -69,7 +73,7 @@ const Auth = () => {
                                 placeholder="Apellido"
                                 className="infoInput"
                                 name="lastname"
-                                onChange = {hadleChange}
+                                onChange={hadleChange}
                                 value={data.lastname}
                             />
                         </div>
@@ -81,7 +85,7 @@ const Auth = () => {
                             className="infoInput"
                             name="username"
                             placeholder="Usuario"
-                            onChange = {hadleChange}
+                            onChange={hadleChange}
                             value={data.username}
                         />
                     </div>
@@ -92,7 +96,7 @@ const Auth = () => {
                             className="infoInput"
                             name="password"
                             placeholder="Contraseña"
-                            onChange = {hadleChange}
+                            onChange={hadleChange}
                             value={data.password}
                         />
                         {isSignUp && <input
@@ -100,16 +104,16 @@ const Auth = () => {
                             className="infoInput"
                             name="confirmpass"
                             placeholder="Confirmar contraseña"
-                            onChange = {hadleChange}
+                            onChange={hadleChange}
                             value={data.confirmpass}
                         />}
 
                     </div>
-                      <span style={{display: confirmPass? "none": "block", color:"red", fontSize: "14px", alignSelf: "flex-end", marginRight: "5px"}}>
+                    <span style={{ display: confirmPass ? "none" : "block", color: "red", fontSize: "14px", alignSelf: "flex-end", marginRight: "5px" }}>
                         * Las contraseñas no coinciden
-                      </span>
+                    </span>
                     <div>
-                        <span style={{ fontSize: "16px", cursor: "pointer" }} onClick={() => {setIsSignUp((prev) => !prev); resetForm()}}>
+                        <span style={{ fontSize: "16px", cursor: "pointer" }} onClick={() => { setIsSignUp((prev) => !prev); resetForm() }}>
                             {isSignUp ? "¿Ya tienes una cuenta? Inicia sesión." : "¿No tienes una cuenta? Regístrate."}
                         </span>
                     </div>
