@@ -1,6 +1,7 @@
 import * as AuthApi from '../api/AuthRequest'
 
-export const logIn = (formData) = async(dispatch) => {
+
+export const logIn = (formData) => async(dispatch) => {
 
     dispatch({type: "AUTH_START"})
     try {
@@ -12,7 +13,7 @@ export const logIn = (formData) = async(dispatch) => {
     }   
 }
 
-export const signUp = (formData) = async(dispatch) => {
+export const signUp = (formData) => async(dispatch) => {
 
     dispatch({type: "AUTH_START"})
     try {
