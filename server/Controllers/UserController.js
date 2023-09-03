@@ -1,5 +1,23 @@
 import UserModel from "../Models/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+//obtener todos los usuarios
+export const getAllUsers = async (req, res) => {
+    try {
+        let users = await UserModel.find();
+
+        users = users.map((user)=> {
+            const {password,...otherDetails} = user._doc
+            return otherDetails
+        })
+        res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+
 //obtener un usuario
 export const getUser = async (req, res) => {
     const id = req.params.id;
@@ -19,12 +37,11 @@ export const getUser = async (req, res) => {
         res.status(500).json(error)
     }
 };
-//actualiazr un usuario
+//actualizar un usuario
 export const updateUser = async (req, res) => {
     const id = req.params.id;
-    const { currentUserId, currentUserAdminStatus, password } = req.body;
-
-    if (id === currentUserId || currentUserAdminStatus) {
+    const { _id, currentUserAdminStatus, password } = req.body;
+    if (id === _id) {
         try {
             if (password) {
                const salt = await bcrypt.genSalt(10);
@@ -35,7 +52,12 @@ export const updateUser = async (req, res) => {
               new: true,
             });
 
-            res.status(200).json(user)
+            const token = jwt.sign(
+                {username: user.username, id: user._id},
+                process.env.JWTKEY, 
+                {expiresIn: "9h"}
+            )
+            res.status(200).json({user, token})
             } catch (error) {
             res.status(500).json(error)
             }
