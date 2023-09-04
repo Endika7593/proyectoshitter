@@ -63,7 +63,7 @@ const PostShare = () => {
                 ref = {desc}
                 required
                  type="text"
-                    placeholder="¿Qué pasa?" />
+                    placeholder="¿Qué está cagando?" />
                 <div className="postOptions">
                     <div className="option" 
                     style={{color: "var(--photo)"}}

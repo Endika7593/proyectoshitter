@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './Auth.css'
-import Logo from '../../img/logo.png'
+import Logo from '../../img/logoauth.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { logIn, signUp } from '../../actions/AuthAction';
 
@@ -52,7 +52,7 @@ const Auth = () => {
                 <img src={Logo} alt="" />
                 <div className="Webname">
                     <h1>Proyecto de verano</h1>
-                    <h1>A FullStack</h1>
+                    <h1>Shitter</h1>
                     <h6>Explora vainas y movidas</h6>
                 </div>
             </div>
