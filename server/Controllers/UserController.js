@@ -54,7 +54,7 @@ export const updateUser = async (req, res) => {
 
             const token = jwt.sign(
                 {username: user.username, id: user._id},
-                process.env.JWTKEY, 
+                process.env.JWT_KEY, 
                 {expiresIn: "9h"}
             )
             res.status(200).json({user, token})
@@ -94,18 +94,18 @@ export const deleteUser = async (req, res) => {
 export const followUser = async (req, res) => {
     const id = req.params.id
 
-    const {currentUserId} = req.body
+    const {_id} = req.body
 
-    if (currentUserId === id) {
+    if (_id === id) {
         res.status(403).json("Acción no permitida, no puedes seguirte a ti mismo, macho, estamos tontos??")
     } else {
         try {
             const followUser= await UserModel.findById(id);
-            const followingUser = await UserModel.findById(currentUserId);
+            const followingUser = await UserModel.findById(_id);
 
-            if(!followUser.followers.includes(currentUserId))
+            if(!followUser.followers.includes(_id))
             {
-                await followUser.updateOne({$push : {followers: currentUserId}});
+                await followUser.updateOne({$push : {followers: _id}});
                 await followingUser.updateOne({$push: {following: id}});
                 res.status(200).json("Usuario seguido");
             }
@@ -125,18 +125,18 @@ export const followUser = async (req, res) => {
 export const UnFollowUser = async (req, res) => {
     const id = req.params.id
 
-    const {currentUserId} = req.body
+    const {_id} = req.body
 
-    if (currentUserId === id) {
+    if (_id === id) {
         res.status(403).json("Acción no permitida, no puedes seguirte a ti mismo, macho, estamos tontos??")
     } else {
         try {
             const followUser= await UserModel.findById(id);
-            const followingUser = await UserModel.findById(currentUserId);
+            const followingUser = await UserModel.findById(_id);
 
-            if(followUser.followers.includes(currentUserId))
+            if(followUser.followers.includes(_id))
             {
-                await followUser.updateOne({$pull : {followers: currentUserId}})
+                await followUser.updateOne({$pull : {followers: _id}})
                 await followingUser.updateOne({$pull: {following: id}})
                 res.status(200).json("Has dejado en paz al usuario!")
             }
